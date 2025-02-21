@@ -47,6 +47,6 @@ jobs:
     - name: build
       run: cmake --build build --config ${{ matrix.build_type }}
 
-    - name: Test
+    - name: test
       working-directory: build
       run: ctest --build-config ${{ matrix.build_type }}

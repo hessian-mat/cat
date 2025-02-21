@@ -2,6 +2,7 @@
 <h1 align="center">cat: C Accessories Toolkit</h1>
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![CI](https://github.com/hessian-mat/cat/actions/workflows/cmake.yml/badge.svg)](https://github.com/hessian-mat/cat/actions/workflows/cmake.yml)
 
 Generic implemetation of containers in C & more.
 
