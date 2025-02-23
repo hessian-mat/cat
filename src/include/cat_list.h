@@ -32,6 +32,7 @@ extern "C" {
 #include "cat_error.h"
 
 typedef struct list_s* list_t;
+typedef struct list_it_s* list_it_t;
 
 size_t list_size(list_t list);
 
@@ -59,6 +60,13 @@ stat_t list_copy(list_t* dst, list_t src);
 void list_map(list_t list, void (*fn)(void*));
 void list_clear(list_t list);
 void list_deinit(list_t list);
+
+list_it_t list_begin(list_t list);
+list_it_t list_end(list_t list);
+int list_next(list_it_t it, void* ret_elem);
+int list_prev(list_it_t it, void* ret_elem);
+
+void list_it_deinit(list_it_t it);
 
 #define list(type) \
     _list_init(sizeof(type), \

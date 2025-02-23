@@ -42,10 +42,15 @@ typedef struct node_s {
     void          *elem;
 } node_s, *node_t;
 
+typedef struct list_it_s {
+    struct list_s *list;
+    struct node_s *current;
+} list_it_s;
+
 static stat_t node_alloc(list_t list, node_t* node);
 
 static void node_unlink(list_t list, node_t node);
-static void node_link(list_t list, node_t node, node_t new);
+static void node_link(list_t list, node_t node, node_t link);
 
 static void list_get_node(list_t list, node_t* ret_node, size_t i);
 
@@ -236,16 +241,16 @@ static void node_unlink(list_t list, node_t node)
  * @param node Node to link to
  * @param new Node to link
  */
-static void node_link(list_t list, node_t node, node_t new)
+static void node_link(list_t list, node_t node, node_t link)
 {
-    new->prev = node->prev;
-    new->next = node;
+    link->prev = node->prev;
+    link->next = node;
     if (node->prev) {
-        new->prev->next = new;
+        link->prev->next = link;
     } else {
-        list->head = new;
+        list->head = link;
     }
-    node->prev = new;
+    node->prev = link;
 }
 
 /**
@@ -496,4 +501,80 @@ void list_deinit(list_t list)
 {
     list_clear(list);
     free(list);
+}
+
+/**
+ * Get the first iterator of the list
+ * 
+ * @param list List
+ * @return Iterator to the first element
+ */
+list_it_t list_begin(list_t list)
+{
+    list_it_t it = (list_it_t)malloc(sizeof(list_it_s));
+    if (!it) return NULL;
+
+    it->list = list;
+    it->current = list->head;
+    return it;
+}
+
+/**
+ * Get the last iterator of the list
+ * 
+ * @param list List
+ * @return Iterator to the last element
+ */
+list_it_t list_end(list_t list)
+{
+    list_it_t it = (list_it_t)malloc(sizeof(list_it_s));
+    if (!it) return NULL;
+
+    it->list = list;
+    it->current = list->tail;
+    return it;
+}
+
+/**
+ * Get the next iterator of the list
+ * 
+ * @param it Iterator
+ * @param ret_elem Pointer to the element to get
+ * @return 1 if the iterator has a next element, 0 otherwise
+ */
+int list_next(list_it_t it, void* ret_elem)
+{
+    if (!it->current) return 0;
+
+    if (ret_elem)
+        memcpy(ret_elem, it->current->elem, it->list->elem_size);
+    it->current = it->current->next;
+    return 1;
+}
+
+/**
+ * Get the previous iterator of the list
+ * 
+ * @param it Iterator
+ * @param ret_elem Pointer to the element to get
+ * @return 1 if the iterator has a previous element, 0 otherwise
+ */
+int list_prev(list_it_t it, void* ret_elem)
+{
+    if (!it->current) return 0;
+
+    if (ret_elem)
+        memcpy(ret_elem, it->current->elem, it->list->elem_size);
+    it->current = it->current->prev;
+    return 1;
+}
+
+/**
+ * Free the iterator
+ * 
+ * @param it Iterator
+ */
+void list_it_deinit(list_it_t it)
+{
+    free(it);
 }
