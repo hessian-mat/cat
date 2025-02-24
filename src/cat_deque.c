@@ -256,7 +256,7 @@ stat_t deque_push_back(deque_t deq, void* elem)
     }
 
     memcpy(deque_shift(deq, deq->rear), elem, deq->elem_size);
-    deq->rear = (deq->rear + 1) % deq->capacity;
+    deq->rear = (deq->rear == deq->capacity - 1) ? 0 : deq->rear + 1;
     deq->size++;
 
     return COMPLETE;
@@ -275,7 +275,7 @@ stat_t deque_pop_front(deque_t deq, void* ret_elem)
 
     if (ret_elem)
         memcpy(ret_elem, deque_shift(deq, deq->front), deq->elem_size);
-    deq->front = (deq->front + 1) % deq->capacity;
+    deq->front = (deq->front == deq->capacity - 1) ? 0 : deq->front + 1;
     deq->size--;
 
     return COMPLETE;
