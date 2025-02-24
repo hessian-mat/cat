@@ -106,6 +106,8 @@ string_t string_custom(char* cstr,
                        void (*free_fn)(void*),
                        void* (*alloc_fn)(size_t))
 {
+    if (strlen(cstr) >= ((size_t)0 - 2))
+        return ERR_CAPACITY_OVERFLOW;
     string_t str = (string_t)malloc(sizeof(string_s));
     if (!str) return NULL;
 
@@ -319,7 +321,7 @@ stat_t string_insert(string_t str, char* cstr, size_t i)
 {
     size_t n = strlen(cstr);
     if (i > str->len) return ERR_INDEX_OUT_OF_RANGE;
-    if (str->capacity >= ((size_t)0 - 2) - n)
+    if (n >= ((size_t)0 - 2) - str->len)
         return ERR_CAPACITY_OVERFLOW;
     if (str->len + n + 1 >= str->capacity) {
         if (string_alloc(str, str->len + n + 1))
@@ -489,7 +491,7 @@ stat_t string_concat(string_t str1, string_t str2)
 stat_t string_nconcat(string_t str1, string_t str2, size_t n)
 {
     n = (n > str2->len) ? str2->len : n;
-    if (str1->capacity >= ((size_t)0 - 2) - n)
+    if (n > ((size_t)0 - 2) - str1->len)
         return ERR_CAPACITY_OVERFLOW;
     if (str1->len + n + 1 > str1->capacity) {
         if (string_alloc(str1, str1->len + n + 1))
