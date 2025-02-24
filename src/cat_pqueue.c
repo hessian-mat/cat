@@ -342,6 +342,32 @@ stat_t pqueue_top(pqueue_t pq, void* elem)
 }
 
 /**
+ * Merge two priority queues
+ * 
+ * @param dst Destination priority queue
+ * @param src Source priority queue
+ * @return COMPLETE on success, corresponding error code on failure
+ */
+stat_t pqueue_merge(pqueue_t dst, pqueue_t src)
+{
+    if (src->size > (((size_t)0 - 2) / dst->elem_size) - dst->size)
+        return ERR_CAPACITY_OVERFLOW;
+    if (dst->size + src->size > dst->capacity) {
+        if (pqueue_alloc(dst, dst->size + src->size + 1))
+            return ERR_MEMORY_ALLOCATION;
+        dst->capacity = dst->size + src->size;
+    }
+    memcpy(pqueue_shift(dst, dst->size), src->heap, src->elem_size * src->size);
+    dst->size += src->size;
+
+    for (size_t i = dst->size / 2 - 1; i > 0; i--) {
+        heapify_down(dst, i);
+    }
+    heapify_down(dst, 0);
+    return COMPLETE;
+}
+
+/**
  * Copy a priority queue with copy of the elements
  * 
  * @param dst Pointer to the destination priority queue

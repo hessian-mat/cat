@@ -51,6 +51,7 @@ stat_t pqueue_push(pqueue_t pq, void* elem);
 stat_t pqueue_pop(pqueue_t pq, void* ret_elem);
 stat_t pqueue_top(pqueue_t pq, void* ret_elem);
 
+stat_t pqueue_merge(pqueue_t dst, pqueue_t src);
 stat_t pqueue_copy(pqueue_t* dst, pqueue_t src);
 
 void pqueue_map(pqueue_t pq, void (*fn)(void*));

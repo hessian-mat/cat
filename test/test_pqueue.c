@@ -142,8 +142,34 @@ void test5()
     pqueue_deinit(max_pq);
 }
 
+// merge
+void test6() {
+    pqueue_t pq1 = pqueue(int, 5, int_cmp1);
+    pqueue_t pq2 = pqueue(int, 5, int_cmp1);
+    int v1[] = {5, 3, 7, 16, 9};
+    int v2[] = {10, 0, 12, 13, 14};
+    for (int i = 0; i < 5; i++) {
+        TEST_ASSERT_EQUAL_INT(COMPLETE, pqueue_push(pq1, &v1[i]));
+        TEST_ASSERT_EQUAL_INT(COMPLETE, pqueue_push(pq2, &v2[i]));
+    }
+    TEST_ASSERT_EQUAL_INT(COMPLETE, pqueue_merge(pq1, pq2));
+    TEST_ASSERT_EQUAL_INT64(10, pqueue_size(pq1));
+    TEST_ASSERT_EQUAL_INT64(10, pqueue_capacity(pq1));
+
+    int t1[] = {0, 3, 5, 7, 9, 10, 12, 13, 14, 16};
+    for (int i = 0; i < 10; i++) {
+        int v;
+        TEST_ASSERT_EQUAL_INT(COMPLETE, pqueue_pop(pq1, &v));
+        TEST_ASSERT_EQUAL_INT(t1[i], v);
+    }
+    TEST_ASSERT_TRUE(pqueue_is_empty(pq1));
+    TEST_ASSERT_TRUE(pqueue_is_full(pq2));
+    pqueue_deinit(pq1);
+    pqueue_deinit(pq2);
+}
+
 // copy
-void test6()
+void test7()
 {
     pqueue_t pq1 = pqueue(int, 5, int_cmp1);
     int v[] = {5, 3, 7, 1, 9};
@@ -185,7 +211,7 @@ void test6()
 }
 
 // stress
-void test7()
+void test8()
 {
     pqueue_t pq = pqueue(int, 10, int_cmp1);
     const int N = 100000;
@@ -213,7 +239,7 @@ int point_cmp(const void* a, const void* b)
 }
 
 // struct
-void test8()
+void test9()
 {
     pqueue_t pq = pqueue(Point, 3, point_cmp);
     
@@ -236,7 +262,7 @@ int str_cmp(const void* a, const void* b)
 }
 
 // string literals
-void test9()
+void test10()
 {
     pqueue_t pq = pqueue(char*, 5, str_cmp);
     
@@ -268,5 +294,6 @@ int main()
     RUN_TEST(test7);
     RUN_TEST(test8);
     RUN_TEST(test9);
+    RUN_TEST(test10);
     return UNITY_END();
 } 
