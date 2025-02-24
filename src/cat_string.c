@@ -107,7 +107,7 @@ string_t string_custom(char* cstr,
                        void* (*alloc_fn)(size_t))
 {
     if (strlen(cstr) >= ((size_t)0 - 2))
-        return ERR_CAPACITY_OVERFLOW;
+        return NULL;
     string_t str = (string_t)malloc(sizeof(string_s));
     if (!str) return NULL;
 
