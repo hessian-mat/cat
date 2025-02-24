@@ -587,6 +587,23 @@ stat_t hashmap_copy(hashmap_t* dst, hashmap_t src)
 }
 
 /**
+ * Map a function over the key-value pairs of the hashmap
+ * 
+ * @param ht Hashmap
+ * @param fn Function to map
+ */
+void hashmap_map(hashmap_t ht, void (*fn)(void*, void*))
+{
+    for (size_t i = 0; i < ht->capacity; i++) {
+        hashmap_entry_t entry = ht->entries[i];
+        while (entry) {
+            fn(entry->key, entry->elem);
+            entry = entry->next;
+        }
+    }
+}
+
+/**
  * Map a function over the keys of the hashmap
  * 
  * @param ht Hashmap

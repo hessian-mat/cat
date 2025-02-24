@@ -56,6 +56,7 @@ stat_t hashmap_query(hashmap_t ht, void* key, void* ret_val);
 
 stat_t hashmap_copy(hashmap_t* dst, hashmap_t src);
 
+void hashmap_map(hashmap_t ht, void (*fn)(void*, void*));
 void hashmap_key_map(hashmap_t ht, void (*fn)(void*));
 void hashmap_val_map(hashmap_t ht, void (*fn)(void*));
 void hashmap_clear(hashmap_t ht);
