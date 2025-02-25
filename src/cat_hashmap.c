@@ -231,7 +231,7 @@ hashmap_t _hashmap_init(size_t capacity,
                         void* (*alloc_fn)(size_t),
                         void (*free_fn)(void*))
 {
-    if (capacity > ((size_t)0 - 1) / elem_size)
+    if (capacity >= ((size_t)0 - 1) / sizeof(hashmap_entry_t))
         return NULL;
     hashmap_t ht = (hashmap_t)malloc(sizeof(hashmap_s));
     if (!ht) return NULL;

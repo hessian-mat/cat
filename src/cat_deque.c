@@ -132,7 +132,7 @@ static stat_t deque_alloc(deque_t deq, size_t capacity)
             memcpy((char*)buffer + i * deq->elem_size,
                    deque_shift(deq, j),
                    deq->elem_size);
-            j = (j + 1) % deq->capacity;
+            j = (j == deq->capacity - 1) ? 0 : j + 1;
         }
         dealloc(deq->deque);
     }
@@ -156,7 +156,7 @@ deque_t _deque_init(size_t capacity,
                     void (*free_fn)(void*),
                     void* (*alloc_fn)(size_t))
 {
-    if (capacity > ((size_t)0 - 1) / elem_size)
+    if (capacity >= ((size_t)0 - 1) / elem_size)
         return NULL;
     deque_t deq = (deque_t)malloc(sizeof(deque_s));
     if (!deq) return NULL;
@@ -422,7 +422,7 @@ void deque_map(deque_t deq, void (*fn)(void*))
 {
     for (size_t i = 0, j = deq->front; i < deq->size; i++) {
         fn(deque_shift(deq, j));
-        j = (j + 1) % deq->capacity;
+        j = (j == deq->capacity - 1) ? 0 : j + 1;
     }
 }
 

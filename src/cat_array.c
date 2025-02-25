@@ -167,7 +167,7 @@ array_t _array_init(size_t capacity,
                     void (*free_fn)(void*),
                     void* (*alloc_fn)(size_t))
 {
-    if (capacity > ((size_t)0 - 1) / elem_size)
+    if (capacity >= ((size_t)0 - 1) / elem_size)
         return NULL;
     array_t arr = (array_t)malloc(sizeof(array_s));
     if (!arr) return NULL;

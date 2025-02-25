@@ -159,7 +159,7 @@ pqueue_t _pqueue_init(size_t capacity,
                       void (*free_fn)(void*),
                       void* (*alloc_fn)(size_t))
 {
-    if (capacity > ((size_t)0 - 1) / elem_size)
+    if (capacity >= ((size_t)0 - 1) / elem_size)
         return NULL;
     pqueue_t pq = (pqueue_t)malloc(sizeof(pqueue_s));
     if (!pq) return NULL;
@@ -191,7 +191,7 @@ pqueue_t _pqueue_init(size_t capacity,
 stat_t pqueue_reserve(pqueue_t pq, size_t capacity)
 {
     if (capacity <= pq->capacity ||
-        capacity >= ((size_t)0 - 1) / pq->elem_size)
+        capacity >= ((size_t)0 - 2) / pq->elem_size)
         return ERR_INVALID_OPERATION;
 
     if (pqueue_alloc(pq, capacity + 1))
