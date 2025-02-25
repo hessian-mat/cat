@@ -57,6 +57,7 @@ stat_t deque_back(deque_t deq, void* ret_elem);
 stat_t deque_get(deque_t deq, void* ret_elem, size_t i);
 stat_t deque_set(deque_t deq, void* elem, size_t i);
 
+stat_t deque_concat(deque_t dst, deque_t src);
 stat_t deque_copy(deque_t* dst, deque_t src);
 
 void* deque_at(deque_t deq, size_t i);

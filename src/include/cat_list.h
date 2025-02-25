@@ -55,6 +55,7 @@ stat_t list_back(list_t list, void* ret_elem);
 stat_t list_get(list_t list, void* ret_elem, size_t i);
 stat_t list_set(list_t list, void* elem, size_t i);
 
+void list_concat(list_t dst, list_t src);
 stat_t list_copy(list_t* dst, list_t src);
 
 void list_map(list_t list, void (*fn)(void*));

@@ -377,6 +377,27 @@ stat_t array_set(array_t arr, void* elem, size_t i)
 }
 
 /**
+ * Concatenate two arrays
+ * 
+ * @param dst Destination array
+ * @param src Source array
+ * @return COMPLETE on success, corresponding error code on failure
+ */
+stat_t array_concat(array_t dst, array_t src)
+{
+    if (src->size > (((size_t)0 - 1) / dst->elem_size) - dst->size)
+        return ERR_CAPACITY_OVERFLOW;
+    if (dst->size + src->size > dst->capacity) {
+        if (array_alloc(dst, dst->size + src->size + 1))
+            return ERR_MEMORY_ALLOCATION;
+        dst->capacity = dst->size + src->size;
+    }
+    memcpy(array_shift(dst, dst->size), src->array, src->size * src->elem_size);
+    dst->size += src->size;
+    return COMPLETE;
+}
+
+/**
  * Copy an array with copy of the elements
  * 
  * @param dst Pointer to the destination

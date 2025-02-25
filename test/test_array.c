@@ -152,8 +152,30 @@ void test5()
     array_deinit(arr);
 }
 
-// copy
+// concat
 void test6()
+{
+    array_t arr1 = array(int, 4);
+    array_t arr2 = array(int, 3);
+    int v[] = {0, 1, 2, 3, 4, 5, 6, 7};
+    for (int i = 0; i < 4; i++) {
+        TEST_ASSERT_EQUAL_INT(COMPLETE, array_push_back(arr1, &v[i]));
+    }
+    for (int i = 4; i < 8; i++) {
+        TEST_ASSERT_EQUAL_INT(COMPLETE, array_push_back(arr2, &v[i]));
+    }
+    TEST_ASSERT_EQUAL_INT(COMPLETE, array_concat(arr1, arr2));
+
+    int t[] = {0, 1, 2, 3, 4, 5, 6, 7};
+    int *p = array_data(arr1);
+    TEST_ASSERT_EQUAL_INT_ARRAY(t, p, 8);
+
+    array_deinit(arr1);
+    array_deinit(arr2);
+}
+
+// copy
+void test7()
 {
     array_t arr1 = array(int, 10);
     int v[] = {1, 2, 3, 4, 5};
@@ -188,7 +210,7 @@ void test6()
 }
 
 // sort and bsearch
-void test7()
+void test8()
 {
     array_t arr = array(int, 5);
     int v[] = {5, 3, 7, 1, 9};
@@ -219,7 +241,7 @@ void test7()
 }
 
 // stress
-void test8()
+void test9()
 {
     array_t arr = array(int, 10);
     const int N = 100000;
@@ -244,7 +266,7 @@ void test8()
 typedef struct { int x; int y; } Point;
 
 // struct
-void test9()
+void test10()
 {
     array_t points = array(Point, 3);
     
@@ -268,7 +290,7 @@ void test9()
 }
 
 // string literals
-void test10()
+void test11()
 {
     array_t arr = array(char*, 10);
 
@@ -302,5 +324,6 @@ int main()
     RUN_TEST(test8);
     RUN_TEST(test9);
     RUN_TEST(test10);
+    RUN_TEST(test11);
     return UNITY_END();
 } 

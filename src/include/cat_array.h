@@ -58,6 +58,7 @@ stat_t array_back(array_t arr, void* ret_elem);
 stat_t array_get(array_t arr, void* ret_elem, size_t i);
 stat_t array_set(array_t arr, void* elem, size_t i);
 
+stat_t array_concat(array_t dst, array_t src);
 stat_t array_copy(array_t* dst, array_t src);
 
 void* array_at(array_t arr, size_t i);

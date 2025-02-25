@@ -432,6 +432,30 @@ stat_t list_set(list_t list, void* elem, size_t i)
 }
 
 /**
+ * Concatenate two lists and clear the source
+ * 
+ * @param dst Destination list
+ * @param src Source list
+ */
+void list_concat(list_t dst, list_t src)
+{
+    if (src->size == 0) return;
+    if (dst->size == 0) {
+        dst->head = src->head;
+        dst->tail = src->tail;
+        dst->size = src->size;
+    } else {
+        dst->tail->next = src->head;
+        src->head->prev = dst->tail;
+        dst->tail = src->tail;
+        dst->size += src->size;
+    }
+    
+    src->head = src->tail = NULL;
+    src->size = 0;
+}
+
+/**
  * Copy a list
  * 
  * @param dst Pointer to the destination list

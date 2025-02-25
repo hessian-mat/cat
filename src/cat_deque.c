@@ -369,6 +369,33 @@ stat_t deque_set(deque_t deq, void* elem, size_t i)
 }
 
 /**
+ * Concatenate two deques
+ * 
+ * @param dst Destination deque
+ * @param src Source deque
+ * @return COMPLETE on success, corresponding error code on failure
+ */
+stat_t deque_concat(deque_t dst, deque_t src)
+{
+    if (src->size == 0) return COMPLETE;
+    if (src->size > (((size_t)0 - 1) / dst->elem_size) - dst->size)
+        return ERR_CAPACITY_OVERFLOW;
+    if (dst->size + src->size > dst->capacity) {
+        if (deque_alloc(dst, dst->size + src->size))
+            return ERR_MEMORY_ALLOCATION;
+        dst->capacity = dst->size + src->size;
+    }
+    for (size_t i = dst->rear, j = src->front, k = 0; k < src->size; k++) {
+        memcpy(deque_shift(dst, i), deque_shift(src, j), dst->elem_size);
+        i = (i == dst->capacity - 1) ? 0 : i + 1;
+        j = (j == src->capacity - 1) ? 0 : j + 1;
+    }
+    dst->rear = (dst->rear + src->size) % dst->capacity;
+    dst->size += src->size;
+    return COMPLETE;
+}
+
+/**
  * Copy a deque with copy of the elements
  * 
  * @param dst Pointer to the destination

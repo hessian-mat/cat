@@ -146,8 +146,37 @@ void test5()
     deque_deinit(deq);
 }
 
-// copy
+// concat
 void test6()
+{
+    deque_t deq1 = deque(int, 5);
+    deque_t deq2 = deque(int, 3);
+    int v[] = {0, 1, 2, 3, 4, 5, 6, 7};
+    for (int i = 2; i < 5; i++) {
+        TEST_ASSERT_EQUAL_INT(COMPLETE, deque_push_back(deq1, &v[i]));
+    }
+    TEST_ASSERT_EQUAL_INT(COMPLETE, deque_push_front(deq1, &v[1]));
+    TEST_ASSERT_EQUAL_INT(COMPLETE, deque_push_front(deq1, &v[0]));
+    for (int i = 5; i < 8; i++) {
+        TEST_ASSERT_EQUAL_INT(COMPLETE, deque_push_back(deq2, &i));
+    }
+    TEST_ASSERT_EQUAL_INT(COMPLETE, deque_concat(deq1, deq2));
+    TEST_ASSERT_EQUAL_INT64(8, deque_size(deq1));
+
+    int t[] = {0, 1, 2, 3, 4, 5, 6, 7};
+    for (int i = 0; i < 8; i++) {
+        TEST_ASSERT_EQUAL_INT(COMPLETE, deque_pop_front(deq1, &t[i]));
+    }
+    TEST_ASSERT_FALSE(deque_is_empty(deq2));
+    TEST_ASSERT_EQUAL_INT64(3, deque_size(deq2));
+    TEST_ASSERT_EQUAL_INT64(8, deque_capacity(deq1));
+
+    deque_deinit(deq1);
+    deque_deinit(deq2);
+}
+
+// copy
+void test7()
 {
     deque_t deq1 = deque(int, 4);
     int v[] = {1, 3, 2};
@@ -180,7 +209,7 @@ void test6()
 }
 
 // stress
-void test7()
+void test8()
 {
     deque_t deq = deque(int, 10);
     const int N = 100000;
@@ -204,7 +233,7 @@ void test7()
 typedef struct { int x; int y; } Point;
 
 // struct
-void test8()
+void test9()
 {
     deque_t deq = deque(Point, 3);
     
@@ -222,7 +251,7 @@ void test8()
 }
 
 // string literals
-void test9()
+void test10()
 {
     deque_t deq = deque(char*, 4);
     
@@ -261,5 +290,6 @@ int main()
     RUN_TEST(test7);
     RUN_TEST(test8);
     RUN_TEST(test9);
+    RUN_TEST(test10);
     return UNITY_END();
 } 

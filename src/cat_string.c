@@ -469,10 +469,10 @@ stat_t string_slice(string_t str,
 }
 
 /**
- * Concatenate two strings by appending str2 to str1
+ * Concatenate two strings
  * 
- * @param str1 Destination string to append to
- * @param str2 Source string to append from
+ * @param str1 Destination string
+ * @param str2 Source string
  * @return COMPLETE on success, corresponding error code on failure
  */
 stat_t string_concat(string_t str1, string_t str2)
