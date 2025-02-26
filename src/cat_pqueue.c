@@ -27,6 +27,7 @@
 #include <string.h>
 
 #define PQUEUE_EXP_FACTOR 2
+#define PQUEUE_DEFAULT_CAPACITY 8
 
 #define pqueue_shift(pq, i) ((char*)pq->heap + (i) * pq->elem_size)
 #define parent(i) ((i - 1) / 2)
@@ -165,7 +166,7 @@ pqueue_t _pqueue_init(size_t capacity,
     if (!pq) return NULL;
 
     pq->size = 0;
-    pq->capacity = capacity;
+    pq->capacity = capacity ? capacity : PQUEUE_DEFAULT_CAPACITY;
     pq->elem_size = elem_size;
     pq->heap = NULL;
 

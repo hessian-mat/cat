@@ -27,6 +27,7 @@
 #include <string.h>
 
 #define ARRAY_EXP_FACTOR 2
+#define ARRAY_DEFAULT_CAPACITY 8
 
 #define array_shift(arr, i) ((char*)arr->array + (i) * arr->elem_size)
 
@@ -172,7 +173,7 @@ array_t _array_init(size_t capacity,
     array_t arr = (array_t)malloc(sizeof(array_s));
     if (!arr) return NULL;
 
-    arr->capacity = capacity;
+    arr->capacity = capacity ? capacity : ARRAY_DEFAULT_CAPACITY;
     arr->elem_size = elem_size;
     arr->size = 0;
     arr->array = NULL;

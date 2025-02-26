@@ -27,6 +27,7 @@
 #include <string.h>
 
 #define DEQUE_EXP_FACTOR 2
+#define DEQUE_DEFAULT_CAPACITY 8
 
 #define deque_shift(deq, i) ((char*)deq->deque + (i) * deq->elem_size)
 
@@ -164,7 +165,7 @@ deque_t _deque_init(size_t capacity,
     deq->front = 0;
     deq->rear = 0;
     deq->size = 0;
-    deq->capacity = capacity;
+    deq->capacity = capacity ? capacity : DEQUE_DEFAULT_CAPACITY;
     deq->elem_size = elem_size;
     deq->deque = NULL;
 
