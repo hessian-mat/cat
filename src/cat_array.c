@@ -296,6 +296,36 @@ stat_t array_insert(array_t arr, void* elem, size_t i)
 }
 
 /**
+ * Insert multiple elements into the array at a specific index
+ * 
+ * @param arr Array
+ * @param elems Pointer to the elements to insert
+ * @param n Number of elements to insert
+ * @param i Index at which to insert the elements
+ * @return COMPLETE on success, corresponding error code on failure
+ */
+stat_t array_ninsert(array_t arr, void* elems, size_t n, size_t i)
+{
+    if (i > arr->size) return ERR_INDEX_OUT_OF_RANGE;
+    if (n > (((size_t)0 - 1) / arr->elem_size) - arr->size)
+        return ERR_CAPACITY_OVERFLOW;
+    if (arr->size + n >= arr->capacity) {
+        if (array_alloc(arr, arr->size + n))
+            return ERR_MEMORY_ALLOCATION;
+        arr->capacity = arr->size + n;
+    }
+
+    if (i < arr->size) {
+        memmove(array_shift(arr, i + n),
+        array_shift(arr, i),
+        (arr->size - i) * arr->elem_size);
+    }
+    memcpy(array_shift(arr, i), elems, n * arr->elem_size);
+    arr->size += n;
+    return COMPLETE;
+}
+
+/**
  * Remove an element from the array at a specific index
  * 
  * @param arr Array
@@ -318,6 +348,32 @@ stat_t array_remove(array_t arr, void* ret_elem, size_t i)
     }
     arr->size--;
 
+    return COMPLETE;
+}
+
+/**
+ * Remove multiple elements from the array at a specific index
+ * 
+ * @param arr Array
+ * @param ret_elems Pointer to the elements to remove, NULL to discard
+ * @param n Number of elements to remove
+ * @param i Index at which to remove the elements
+ * @return COMPLETE on success, corresponding error code on failure
+ */
+stat_t array_nremove(array_t arr, void* ret_elems, size_t n, size_t i)
+{
+    if (arr->size == 0) return ERR_INVALID_OPERATION;
+    if (i >= arr->size || n > arr->size - i) return ERR_INDEX_OUT_OF_RANGE;
+
+    if (ret_elems)
+        memcpy(ret_elems, array_shift(arr, i), n * arr->elem_size);
+
+    if (i + n != arr->size) {
+        memmove(array_shift(arr, i),
+                array_shift(arr, i + n),
+                (arr->size - i - n) * arr->elem_size);
+    } 
+    arr->size -= n;
     return COMPLETE;
 }
 
@@ -389,7 +445,7 @@ stat_t array_concat(array_t dst, array_t src)
     if (src->size > (((size_t)0 - 1) / dst->elem_size) - dst->size)
         return ERR_CAPACITY_OVERFLOW;
     if (dst->size + src->size > dst->capacity) {
-        if (array_alloc(dst, dst->size + src->size + 1))
+        if (array_alloc(dst, dst->size + src->size))
             return ERR_MEMORY_ALLOCATION;
         dst->capacity = dst->size + src->size;
     }

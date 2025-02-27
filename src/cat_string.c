@@ -321,7 +321,7 @@ stat_t string_insert(string_t str, char* cstr, size_t i)
 {
     size_t n = strlen(cstr);
     if (i > str->len) return ERR_INDEX_OUT_OF_RANGE;
-    if (n >= ((size_t)0 - 2) - str->len)
+    if (n > ((size_t)0 - 2) - str->len)
         return ERR_CAPACITY_OVERFLOW;
     if (str->len + n + 1 >= str->capacity) {
         if (string_alloc(str, str->len + n + 1))
@@ -351,7 +351,8 @@ stat_t string_insert(string_t str, char* cstr, size_t i)
 stat_t string_remove(string_t str, size_t i, size_t len)
 {
     if (str->len == 0) return ERR_INVALID_OPERATION;
-    if (i + len > str->len) return ERR_INDEX_OUT_OF_RANGE;
+    if (i >= str->len || len > str->len - i)
+        return ERR_INDEX_OUT_OF_RANGE;
 
     if (i + len != str->len) {
         memmove(str->str + i,
